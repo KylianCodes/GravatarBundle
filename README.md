@@ -3,7 +3,6 @@
 A Symfony bundle to integrate [Gravatar](https://gravatar.com) into your application.  
 Supports avatar URLs, base64 privacy mode, profile data, form validation, CLI tooling, and Symfony Profiler integration.
 
-[![CI](https://github.com/kyliancodes/gravatar-bundle/actions/workflows/ci.yml/badge.svg)](https://github.com/kyliancodes/gravatar-bundle/actions)
 [![Latest Version](https://img.shields.io/packagist/v/kyliancodes/gravatar-bundle.svg)](https://packagist.org/packages/kyliancodes/gravatar-bundle)
 [![Total Downloads](https://img.shields.io/packagist/dt/kyliancodes/gravatar-bundle.svg)](https://packagist.org/packages/kyliancodes/gravatar-bundle)
 [![License](https://img.shields.io/packagist/l/kyliancodes/gravatar-bundle.svg)](LICENSE)
