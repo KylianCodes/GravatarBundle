@@ -1,0 +1,113 @@
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block toolbar %}
+    {% set icon %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        <span class="sf-toolbar-value">{{ collector.callCount }}</span>
+    {% endset %}
+    {% set text %}
+        <div class="sf-toolbar-info-piece">
+            <b>Gravatar calls</b>
+            <span class="sf-toolbar-status {% if collector.errorCount > 0 %}sf-toolbar-status-red{% endif %}">
+                {{ collector.callCount }}
+            </span>
+        </div>
+        {% if collector.cacheHitCount > 0 %}
+            <div class="sf-toolbar-info-piece">
+                <b>Cache hits</b>
+                <span class="sf-toolbar-status sf-toolbar-status-green">{{ collector.cacheHitCount }}</span>
+            </div>
+        {% endif %}
+        <div class="sf-toolbar-info-piece">
+            <b>Total time</b>
+            <span>{{ collector.totalDurationMs }} ms</span>
+        </div>
+    {% endset %}
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: profiler_url }) }}
+{% endblock %}
+
+{% block menu %}
+    <span class="label {% if collector.errorCount > 0 %}label-status-error{% endif %}">
+        <span class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+        </span>
+        <strong>Gravatar</strong>
+        {% if collector.callCount > 0 %}
+            <span class="count">
+                <span>{{ collector.callCount }}</span>
+            </span>
+        {% endif %}
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <h2>Gravatar Calls</h2>
+
+    {% if collector.callCount == 0 %}
+        <div class="empty">
+            <p>No Gravatar calls were made during this request.</p>
+        </div>
+    {% else %}
+        <div class="metrics">
+            <div class="metric">
+                <span class="value">{{ collector.callCount }}</span>
+                <span class="label">Total calls</span>
+            </div>
+            <div class="metric">
+                <span class="value">{{ collector.cacheHitCount }}</span>
+                <span class="label">Cache hits</span>
+            </div>
+            <div class="metric {% if collector.errorCount > 0 %}metric-red{% endif %}">
+                <span class="value">{{ collector.errorCount }}</span>
+                <span class="label">Errors</span>
+            </div>
+            <div class="metric">
+                <span class="value">{{ collector.totalDurationMs }} ms</span>
+                <span class="label">Total time</span>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Method</th>
+                    <th>Email hash (MD5)</th>
+                    <th>Duration</th>
+                    <th>Cache</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i, call in collector.calls %}
+                    <tr>
+                        <td>{{ i + 1 }}</td>
+                        <td><code>{{ call.method }}</code></td>
+                        <td><code>{{ call.email_hash }}</code></td>
+                        <td>{{ call.duration_ms }} ms</td>
+                        <td>
+                            {% if call.cache_hit %}
+                                <span class="label status-success">HIT</span>
+                            {% else %}
+                                <span class="label">MISS</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if call.success %}
+                                <span class="label status-success">OK</span>
+                            {% else %}
+                                <span class="label status-error">ERROR</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

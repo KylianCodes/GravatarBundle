@@ -1,0 +1,28 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    KylianCodes\GravatarBundle\Service\GravatarService:
+        arguments:
+            $tokenStorage: '@?security.token_storage'
+        # Remaining arguments set programmatically in GravatarExtension::load()
+
+    KylianCodes\GravatarBundle\Twig\GravatarExtension:
+        tags:
+            - { name: twig.extension }
+
+    KylianCodes\GravatarBundle\Command\GravatarCheckCommand:
+        tags:
+            - { name: console.command }
+
+    KylianCodes\GravatarBundle\Validator\GravatarExistsValidator:
+        tags:
+            - { name: validator.constraint_validator }
+
+    KylianCodes\GravatarBundle\DataCollector\GravatarDataCollector:
+        tags:
+            - name: data_collector
+              template: '@GravatarBundle/data_collector/gravatar.html.twig'
+              id: gravatar

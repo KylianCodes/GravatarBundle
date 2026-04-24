@@ -1,0 +1,63 @@
+{
+    "name": "kyliancodes/gravatar-bundle",
+    "description": "Symfony bundle to integrate Gravatar service into your application",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "keywords": ["symfony", "gravatar", "avatar", "bundle"],
+    "authors": [
+        {
+            "name": "Kylian"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "symfony/config": "^5.4 || ^6.0 || ^7.0 || ^8.0",
+        "symfony/dependency-injection": "^5.4 || ^6.0 || ^7.0 || ^8.0",
+        "symfony/framework-bundle": "^5.4 || ^6.0 || ^7.0 || ^8.0",
+        "symfony/http-client": "^5.4 || ^6.0 || ^7.0 || ^8.0",
+        "symfony/http-kernel": "^5.4 || ^6.0 || ^7.0 || ^8.0",
+        "symfony/security-core": "^5.4 || ^6.0 || ^7.0 || ^8.0",
+        "twig/twig": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0 || ^11.0",
+        "symfony/cache": "^5.4 || ^6.0 || ^7.0 || ^8.0",
+        "symfony/console": "^5.4 || ^6.0 || ^7.0 || ^8.0",
+        "symfony/twig-bundle": "^5.4 || ^6.0 || ^7.0 || ^8.0",
+        "symfony/validator": "^5.4 || ^6.0 || ^7.0 || ^8.0",
+        "symfony/web-profiler-bundle": "^5.4 || ^6.0 || ^7.0 || ^8.0"
+    },
+    "suggest": {
+        "symfony/cache": "Required to enable response caching",
+        "symfony/console": "Required to use the gravatar:check CLI command",
+        "symfony/validator": "Required to use the #[GravatarExists] validation constraint",
+        "symfony/web-profiler-bundle": "Required to display Gravatar calls in the Symfony Profiler toolbar"
+    },
+    "autoload": {
+        "psr-4": {
+            "KylianCodes\\GravatarBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "KylianCodes\\GravatarBundle\\Tests\\": "Tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage/"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "symfony/flex": true
+        }
+    },
+    "extra": {
+        "symfony": {
+            "require": "^5.4 || ^6.0 || ^7.0 || ^8.0"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
