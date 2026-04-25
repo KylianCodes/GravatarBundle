@@ -8,6 +8,7 @@ use KylianCodes\GravatarBundle\DataCollector\GravatarDataCollector;
 use KylianCodes\GravatarBundle\Service\GravatarService;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -15,8 +16,15 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 /**
  * Loads and manages the bundle configuration.
  */
-class GravatarExtension extends Extension
+class GravatarExtension extends Extension implements PrependExtensionInterface
 {
+    public function prepend(ContainerBuilder $container): void
+    {
+        $container->prependExtensionConfig('twig', [
+            'paths' => [\dirname(__DIR__).'/Resources/views' => 'GravatarBundle'],
+        ]);
+    }
+
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
