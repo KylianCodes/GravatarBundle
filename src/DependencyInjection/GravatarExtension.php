@@ -26,7 +26,6 @@ class GravatarExtension extends Extension
         $loader->load('services.yaml');
 
         $definition = $container->getDefinition(GravatarService::class);
-        $definition->setArgument('$httpClient', new Reference('symfony.http_client'));
         $definition->setArgument('$size', $config['size']);
         $definition->setArgument('$rating', $config['rating']);
         $definition->setArgument('$default', $config['default']);
