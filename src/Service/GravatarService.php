@@ -81,7 +81,7 @@ class GravatarService
         $url = $this->getUrl($email, $size, $rating, $default);
         $cacheKey = 'gravatar_base64_'.md5($url);
         $start = microtime(true);
-        $cacheHit = false;
+        $cacheHit = true;
 
         $fetch = function () use ($url): string {
             $response = $this->httpClient->request('GET', $url);
@@ -99,8 +99,6 @@ class GravatarService
 
                     return $fetch();
                 });
-                // If cache->get() returned without calling the callback, it was a hit
-                $cacheHit = true;
             } else {
                 $result = $fetch();
             }
@@ -147,7 +145,7 @@ class GravatarService
         $url = self::PROFILE_API_URL.$hash;
         $cacheKey = 'gravatar_profile_'.$hash;
         $start = microtime(true);
-        $cacheHit = false;
+        $cacheHit = true;
 
         $fetch = function () use ($url): ?array {
             try {
@@ -181,7 +179,6 @@ class GravatarService
 
                 return $fetch();
             });
-            $cacheHit = true;
         } else {
             $result = $fetch();
         }
