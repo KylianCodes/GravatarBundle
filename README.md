@@ -9,6 +9,32 @@ Supports avatar URLs, base64 privacy mode, profile data, form validation, CLI to
 
 ---
 
+## Quick Start
+
+```bash
+composer require kyliancodes/gravatar-bundle
+```
+
+Create `config/packages/gravatar.yaml`:
+
+```yaml
+gravatar:
+    size: 80
+    default: mp
+```
+
+Use in Twig:
+
+```twig
+<img src="{{ gravatar('user@example.com') }}" alt="Avatar">
+
+{{ gravatar_tag('user@example.com', {size: 120, alt: 'Avatar', class: 'rounded'}) }}
+```
+
+That's it. See below for all available options and features.
+
+---
+
 ## Requirements
 
 - PHP **8.1** or higher
@@ -342,6 +368,14 @@ The image is fetched server-side and inlined as a `data:` URI. The browser makes
 ```
 Content-Security-Policy: img-src 'self' data:;
 ```
+
+---
+
+## Contributing
+
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting a pull request.
+
+Found a bug? [Open an issue](https://github.com/KylianCodes/GravatarBundle/issues/new/choose) — bug report and feature request templates are available.
 
 ---
 
