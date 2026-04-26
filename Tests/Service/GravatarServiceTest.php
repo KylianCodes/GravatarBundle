@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace KylianCodes\GravatarBundle\Tests\Service;
 
+use KylianCodes\GravatarBundle\DataCollector\GravatarDataCollector;
 use KylianCodes\GravatarBundle\Service\GravatarService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -257,5 +258,85 @@ class GravatarServiceTest extends TestCase
         $service = new GravatarService($this->httpClient, tokenStorage: $tokenStorage);
 
         $this->assertSame('identifier@example.com', $service->getCurrentUserEmail());
+    }
+
+    public function testGetBase64ReportsCacheMissToCollector(): void
+    {
+        $cache = $this->createMock(CacheInterface::class);
+        $collector = $this->createMock(GravatarDataCollector::class);
+
+        $cache->method('get')->willReturnCallback(function (string $key, callable $callback) {
+            $item = $this->createMock(ItemInterface::class);
+            $item->method('expiresAfter');
+
+            return $callback($item);
+        });
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->method('getContent')->willReturn('img');
+        $response->method('getHeaders')->willReturn(['content-type' => ['image/jpeg']]);
+        $this->httpClient->method('request')->willReturn($response);
+
+        $collector->expects($this->once())
+            ->method('addCall')
+            ->with('getBase64', 'test@example.com', $this->anything(), false, true);
+
+        $service = new GravatarService($this->httpClient, cache: $cache, collector: $collector);
+        $service->getBase64('test@example.com');
+    }
+
+    public function testGetBase64ReportsCacheHitToCollector(): void
+    {
+        $cache = $this->createMock(CacheInterface::class);
+        $collector = $this->createMock(GravatarDataCollector::class);
+
+        $cache->method('get')->willReturn('data:image/jpeg;base64,cached');
+
+        $collector->expects($this->once())
+            ->method('addCall')
+            ->with('getBase64', 'test@example.com', $this->anything(), true, true);
+
+        $service = new GravatarService($this->httpClient, cache: $cache, collector: $collector);
+        $service->getBase64('test@example.com');
+    }
+
+    public function testGetProfileReportsCacheMissToCollector(): void
+    {
+        $cache = $this->createMock(CacheInterface::class);
+        $collector = $this->createMock(GravatarDataCollector::class);
+
+        $cache->method('get')->willReturnCallback(function (string $key, callable $callback) {
+            $item = $this->createMock(ItemInterface::class);
+            $item->method('expiresAfter');
+
+            return $callback($item);
+        });
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->method('getStatusCode')->willReturn(200);
+        $response->method('toArray')->willReturn(['display_name' => 'John']);
+        $this->httpClient->method('request')->willReturn($response);
+
+        $collector->expects($this->once())
+            ->method('addCall')
+            ->with('getProfile', 'test@example.com', $this->anything(), false, true);
+
+        $service = new GravatarService($this->httpClient, cache: $cache, collector: $collector);
+        $service->getProfile('test@example.com');
+    }
+
+    public function testGetProfileReportsCacheHitToCollector(): void
+    {
+        $cache = $this->createMock(CacheInterface::class);
+        $collector = $this->createMock(GravatarDataCollector::class);
+
+        $cache->method('get')->willReturn(['display_name' => 'John', 'description' => null, 'links' => []]);
+
+        $collector->expects($this->once())
+            ->method('addCall')
+            ->with('getProfile', 'test@example.com', $this->anything(), true, true);
+
+        $service = new GravatarService($this->httpClient, cache: $cache, collector: $collector);
+        $service->getProfile('test@example.com');
     }
 }
