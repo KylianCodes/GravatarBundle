@@ -30,6 +30,8 @@ return [
 ];
 ```
 
+> **Note:** No Flex recipe is provided. You must create `config/packages/gravatar.yaml` manually (see Configuration below).
+
 ---
 
 ## Configuration
@@ -177,10 +179,10 @@ Returns the avatar for the currently authenticated Symfony user. Returns `null` 
     <img src="{{ avatar }}" alt="My avatar" loading="lazy">
 {% endif %}
 
-{# Or as a tag #}
-{% set url = gravatar_user(40) %}
-{% if url %}
-    {{ gravatar_tag(url) }}
+{# Or with a custom size #}
+{% set avatar = gravatar_user(40) %}
+{% if avatar %}
+    <img src="{{ avatar }}" alt="My avatar" loading="lazy">
 {% endif %}
 ```
 
